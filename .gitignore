@@ -1,0 +1,11 @@
+node_modules
+coverage
+dist
+
+.env
+
+yarn.lock
+yarn-error.log
+
+logs/*
+!logs/.gitkeep
