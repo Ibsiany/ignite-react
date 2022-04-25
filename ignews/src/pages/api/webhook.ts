@@ -41,7 +41,16 @@ export default  async (request: NextApiRequest, response:NextApiResponse)=> {
         const { type } = event;
 
         if(relevantEvents.has(type)){
-            console.log('Evento recebido', event)
+            try{
+                switch(type){
+                    case 'checkout.session.completed':
+                        break;
+                     default:
+                         throw new Error('Unhandled event!')
+                }
+            } catch(error) {
+                return response.json({error: 'Webhook handler failded!'})
+            }
         }
 
         response.json({ received: true })
