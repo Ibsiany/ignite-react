@@ -1,19 +1,13 @@
 import { Box, Flex, Heading, Button, Icon, Table, Thead, Tr, Th, Checkbox, Tbody, Td, Text, useBreakpointValue, Spinner } from "@chakra-ui/react";
 import { RiAddLine, RiPencilLine } from "react-icons/ri";
-import { useQuery } from 'react-query';
 import { Header } from "../../components/Header";
 import { Sidebar } from "../../components/Sidebar";
 import { Pagination } from "../../components/Pagination";
 import Link from "next/link";
+import { useUsers } from "../../services/hooks/useUsers";
 
 export default function UserList(){
-    const {data, isLoading, error} = useQuery('users', async () => {
-        const response = await fetch('http://localhost:3000/api/users')
-
-        const data = await response.json()
-
-        return data;
-    });
+    const {data, isLoading, isFetching, error} = useUsers() ;
 
     const isWideVersion = useBreakpointValue({
         base: false,
@@ -29,7 +23,11 @@ export default function UserList(){
 
                 <Box flex="1" borderRadius={8} bg="gray.800" p="8">
                     <Flex mb="8" justify="space-between" align="center">
-                        <Heading size="lg" fontWeight="normal">Usuários</Heading>
+                        <Heading size="lg" fontWeight="normal">
+                            Usuários
+
+                            {!isLoading && isFetching && <Spinner size="sm" color="gray.500" ml="4" />}
+                        </Heading>
                         <Link href="/users/create" passHref>
                             <Button as="a" size="sm" fontSize="sm" colorScheme="pink" leftIcon={<Icon as={RiAddLine}/>}>
                                 Criar novo
@@ -59,25 +57,27 @@ export default function UserList(){
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                <Tr>
-                                    <Td px={["4","4", "6"]} >
-                                        <Checkbox colorScheme="pink"/>
-                                    </Td>
-                                    <Td>
-                                        <Box>
-                                            <Text fontWeight="bold">Ibsiany Dias</Text>
-                                            <Text fontWeight="bold">ibsiany.godinho@precato.com.br</Text>
-                                        </Box>
-                                    </Td>
-                                    {isWideVersion && <Td>29 de Abril, 2022</Td>}
-                                    {isWideVersion && 
-                                        <Td>
-                                            <Button as="a" size="sm" fontSize="sm" colorScheme="purple" leftIcon={<Icon as={RiPencilLine}/>}>
-                                                Editar
-                                            </Button>
+                                {data.map(user => (
+                                    <Tr key={user.id}>
+                                        <Td px={["4","4", "6"]} >
+                                            <Checkbox colorScheme="pink"/>
                                         </Td>
-                                    }
-                                </Tr>
+                                        <Td>
+                                            <Box>
+                                                <Text fontWeight="bold">{user.name}</Text>
+                                                <Text fontWeight="bold">{user.email}</Text>
+                                            </Box>
+                                        </Td>
+                                        {isWideVersion && <Td>{user.createdAt}</Td>}
+                                        {isWideVersion && 
+                                            <Td>
+                                                <Button as="a" size="sm" fontSize="sm" colorScheme="purple" leftIcon={<Icon as={RiPencilLine}/>}>
+                                                    Editar
+                                                </Button>
+                                            </Td>
+                                        }
+                                    </Tr>
+                                ))}
                             </Tbody>
                         </Table>
                         <Pagination />
