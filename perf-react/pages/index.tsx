@@ -1,3 +1,4 @@
+import axios from 'axios';
 import type { NextPage } from 'next'
 import { FormEvent, useState } from 'react'
 import {SearchResults} from '../components/SearchResults'
@@ -13,9 +14,7 @@ const Home: NextPage = () => {
       return;
     }
 
-    const response = await fetch(`http://localhost:3333/products?q=${search}`);
-
-    const data = await response.json();
+    const {data} = await axios.get(`http://localhost:3333/products?q=${search}`);
 
     setResults(data)
   }
