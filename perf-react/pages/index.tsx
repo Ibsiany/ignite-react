@@ -19,6 +19,10 @@ const Home: NextPage = () => {
     setResults(data)
   }
 
+  async function addToWishlist(id: number) {
+    console.log(id)
+  }
+
   return (
     <div>
      <h1>Search</h1>
@@ -33,7 +37,7 @@ const Home: NextPage = () => {
         <button type="submit">Buscar</button>
      </form>
 
-     <SearchResults results={results} />
+     <SearchResults results={results} onAddToWishlist={addToWishlist}/>
     </div>
   )
 }
