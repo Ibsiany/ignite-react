@@ -1,4 +1,6 @@
 import {useMemo} from 'react';
+import {List} from 'react-virtualized/dist/es/List'
+import {ListRowRenderer} from 'react-virtualized'
 import {ProductItem} from './ProductItem'
 
 interface ISearchResultsProps {
@@ -11,6 +13,18 @@ interface ISearchResultsProps {
 }
 
 export function SearchResults({results, onAddToWishlist}: ISearchResultsProps){
+
+    const rowRenderer: ListRowRenderer = ({index, key, style}) => {
+        return (
+            <div key={key} style={style}>
+                <ProductItem 
+                    product={results[index]}
+                    onAddToWishlist={onAddToWishlist}
+                />
+            </div>
+        );
+    }
+
     const totalPrice = useMemo(() => {
         return results.reduce((total, product) => {
             return total + product.price
@@ -21,15 +35,14 @@ export function SearchResults({results, onAddToWishlist}: ISearchResultsProps){
         <div>
             <h1>{totalPrice}</h1>
 
-            {results.map(product => {
-                return (
-                    <ProductItem 
-                        key={product.id}
-                        product={product}
-                        onAddToWishlist={onAddToWishlist}
-                    />
-                )
-            })}
+            <List 
+                height={300} 
+                rowHeight={30}
+                width={900}
+                overscanRowCount={5}
+                rowCount={results.length}
+                rowRenderer={rowRenderer}
+            />
         </div>
     )
 }
