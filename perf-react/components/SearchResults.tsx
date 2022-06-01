@@ -1,5 +1,5 @@
 import {useMemo} from 'react';
-import {List} from 'react-virtualized/dist/es/List'
+import {List} from 'react-virtualized'
 import {ListRowRenderer} from 'react-virtualized'
 import {ProductItem} from './ProductItem'
 
